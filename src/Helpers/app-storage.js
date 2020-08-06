@@ -1,3 +1,4 @@
+import Gladiator from "../gladiator"
 const AppStorage = {
     initializeConditions: () => {
         const martial = window.localStorage.getItem("martial")
@@ -9,24 +10,14 @@ const AppStorage = {
         const brand = window.localStorage.getItem("brand")
         if (martial && showmanship && name && attributes && wins && losses && brand) {
             return {
-                gladiator: {
-                    martial,
-                    showmanship,
-                    name,
-                    attributes,
-                },
+                gladiator: new Gladiator(martial, showmanship, name, attributes),
                 wins,
                 losses,
                 brand,
             }
         }
         return {
-            gladiator: {
-                martial: 3,
-                showmanship: 3,
-                name: "Maximus Decimus Meridius",
-                attributes: "",
-            },
+            gladiator: new Gladiator(),
             wins: 0,
             losses: 0,
             brand: 10,
