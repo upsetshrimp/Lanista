@@ -14,20 +14,31 @@ export default function MainPage() {
     const [brand, setBrand] = useState()
     const [canEndTurn, setCanEndTurn] = useState(false)
     const [turnCount, setTurnCount] = useState(1)
-    const [inBattle, setInBattle] = useState(false)
-    const [currentBattle, setCurrentBattle] = useState(new Battle(1))
+    const [chosenAction, setChosenAction] = useState()
+    const [currentBattle, setCurrentBattle] = useState(Battle.getInstance(1))
+    const isInBattle = turnCount === currentBattle.turn
+    
     useEffect(() => {
         const bubu = InitialConditions.initializeConditions()
         setGladiator(bubu.gladiator)
         setGameHistory({ wins: bubu.wins, losses: bubu.losses })
         setBrand(bubu.brand)
     }, [])
-    const train = attribute => {
-        setGladiator({ ...gladiator, [attribute]: ++gladiator[attribute] })
-        setInBattle(!inBattle)
+    const advanceTurn = () => {
+        if(isInBattle){
+            ////Resolve battle
+
+            setCurrentBattle(Battle.getInstance(turnCount))
+        }
+        else {
+            setGladiator({ ...gladiator, [chosenAction]: ++gladiator[chosenAction] })
+        }
+        // Advance to Next Turn
+        setChosenAction(undefined)
+        setTurnCount(turnCount+1)
+        console.log(39, turnCount)
     }
     const divstyleRight = { width: "30%", display: "grid", padding: "35px" }
-
     return (
         <div>
             <StatView
@@ -37,15 +48,12 @@ export default function MainPage() {
                 brand={brand}
                 gameHistory={gameHistory} />
 
-            {inBattle ?
-                <BattleView
-
-                    currentBattle={currentBattle} /> : <Train
-                    gladiator={gladiator}
-                    train={train}
-                />}
+            {isInBattle ?
+                <BattleView currentBattle={currentBattle} chosenAction={chosenAction} chooseAction={setChosenAction} /> :
+                <Train gladiator={gladiator} chosenAction={chosenAction} chooseAction={setChosenAction} />}
             <div style={divstyleRight}>
                 <Button disabled={canEndTurn}
+                onClick={advanceTurn}
                     variant="contained"
                     color="secondary"
                     padding="35px"
