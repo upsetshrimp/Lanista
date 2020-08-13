@@ -20,7 +20,6 @@ export default function MainPage() {
         setBrand(bubu.brand)
     }, [])
     const train = attribute => {
-
        setGladiator({ ...gladiator, [attribute]: ++gladiator[attribute] })
        setInBattle(!inBattle)
     }
