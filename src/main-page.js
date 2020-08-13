@@ -42,14 +42,19 @@ export default function MainPage() {
                 </div>
                 <h3>Next Battle: </h3>
                 <span>Enemy Level: {currentBattle.enemyLvl}</span>
-                <span>Happens in: {currentBattle.turn-turnCount} Turns</span>
+
+                <span>
+                    Happens in:
+                    {currentBattle?.turn - turnCount} 
+                    {currentBattle?.turn - turnCount == 1 ? ' Turn' : ' Turns'}
+                </span>
                 <div style={divstyleRight}>
                     <Button variant="contained" color="secondary" padding="35px">End Turn</Button>
                 </div>
             </div>
 
             {inBattle ?
-                <h1>BATTLE</h1>:<Train
+                <h1>BATTLE</h1> : <Train
                     gladiator={gladiator}
                     train={train}
                 />}
