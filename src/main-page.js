@@ -24,9 +24,6 @@ export default function MainPage() {
        setGladiator({ ...gladiator, [attribute]: ++gladiator[attribute] })
        setInBattle(!inBattle)
     }
-    useEffect(() => {
-        console.log(gladiator)
-    }, [gladiator])
     const divstyleleft = { width: "30%", display: "grid", padding: "35px" }
     const divstyleRight = { width: "30%", display: "grid", padding: "35px" }
     return (
