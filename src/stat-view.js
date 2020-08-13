@@ -2,7 +2,12 @@ import React from 'react';
 
 
 export default function StatView({ gladiator, currentBattle, turnCount, brand, gameHistory }) {
+    
+    
+    
+    
     const divstyleleft = { width: "30%", display: "grid", padding: "35px" }
+    const timeToNextBattle = currentBattle?.turn - turnCount
     return (
         <>
             < header style={{ textAlign: "center" }}> {gladiator?.name ?? null}</header >
@@ -16,14 +21,17 @@ export default function StatView({ gladiator, currentBattle, turnCount, brand, g
                     <span style={{ textAlign: "center" }}>Showmanship: {gladiator.showmanship}</span>
                     <span style={{ textAlign: "center" }}>Martial: {gladiator.martial}</span>
                 </div>
-                <h3>Next Battle: </h3>
-                <span>Enemy Level: {currentBattle.enemyLvl}</span>
-
+                <p>
+                <h3 style={{textAlign: "center",marginTop: 0 }}>Next Battle</h3>
+                <span>Enemy Level: </span> 
+                <span>{currentBattle.enemyLvl}</span>
+                    <br/>
                 <span>
-                    Happens in:
-                    {currentBattle?.turn - turnCount}
-                    {currentBattle?.turn - turnCount === 1 ? ' Turn' : ' Turns'}
+                    Happens in&nbsp;
+                    {timeToNextBattle} Turn
+                    {timeToNextBattle === 1 ? null : 's'}
                 </span>
+                </p>
 
             </div>
         </>

@@ -26,7 +26,6 @@ export default function MainPage() {
         setGladiator({ ...gladiator, [attribute]: ++gladiator[attribute] })
         setInBattle(!inBattle)
     }
-    const divstyleRight = { width: "30%", display: "grid", padding: "35px" }
 
     return (
         <div>
@@ -39,18 +38,18 @@ export default function MainPage() {
 
             {inBattle ?
                 <BattleView
-
                     currentBattle={currentBattle} /> : <Train
                     gladiator={gladiator}
                     train={train}
                 />}
-            <div style={divstyleRight}>
-                <Button disabled={canEndTurn}
-                    variant="contained"
-                    color="secondary"
-                    padding="35px"
-                >End Turn</Button>
-            </div>
+            <Button
+                style={{ width: "30%", display: "grid", padding: "35px" }}
+                disabled={canEndTurn}
+                variant="contained"
+                color="secondary"
+                padding="35px"
+                size="large"
+            >End Turn</Button>
         </div>
     );
 }
