@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
 
-export default function BattleView({ currentBattle }) {
-    const [chosenStance, setChosenStance] = useState()
+export default function BattleView({ currentBattle, chosenAction, chooseAction}) {
 
     return (
         <div>
@@ -11,20 +10,20 @@ export default function BattleView({ currentBattle }) {
             <div style={{ display: "flex" }}>
                 <div style={{ width: "30%" }}>
                     <Button
-                        variant={chosenStance === 'aggressive' ? "contained" : "outlined"}
+                        variant={chosenAction === 'aggressive' ? "contained" : "outlined"}
                         onClick={() => {
-                            const nextStance = chosenStance === 'aggressive' ? undefined : 'aggressive'
-                            setChosenStance(nextStance)
+                            const nextStance = chosenAction === 'aggressive' ? undefined : 'aggressive'
+                            chooseAction(nextStance)
                         }}
                         color="primary"
                         padding="35px">Aggressive</Button>
                 </div>
                 <div style={{ width: "30%" }}>
                     <Button
-                        variant={chosenStance === 'spectaculum' ? "contained" : "outlined"}
+                        variant={chosenAction === 'spectaculum' ? "contained" : "outlined"}
                         onClick={() => {
-                            const nextStance = chosenStance === 'spectaculum' ? undefined : 'spectaculum'
-                            setChosenStance(nextStance)
+                            const nextStance = chosenAction === 'spectaculum' ? undefined : 'spectaculum'
+                            chooseAction(nextStance)
                         }}
                         color="primary" padding="35px">Spectaculum</Button>
                 </div>
