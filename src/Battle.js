@@ -4,7 +4,7 @@ export default class Battle {
     constructor(currentTurn) {
         this.enemyLvl = Math.floor(Math.random() * 5 + 1)
         this.turn = currentTurn + Math.floor((Math.random() * 3 + 1))
-        this.brandChange = undefined;
+        this.brandModifier = this.generateModifier()
         this.didWin = undefined;
     }
     static getInstance = currentTurn => {
@@ -15,5 +15,10 @@ export default class Battle {
     }
         
         return this.instance
+    }
+    generateModifier = () => {
+        const seed = Math.floor(Math.random()*10 +1)
+        return seed > 7 ? 0 : (seed-4)
+        
     }
 }
