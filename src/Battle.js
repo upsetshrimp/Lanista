@@ -3,7 +3,7 @@ export default class Battle {
     static previousTurn = 0
     constructor(currentTurn) {
         this.enemyLvl = Math.floor(Math.random() * 5 + 1)
-        this.turn = currentTurn + Math.floor((Math.random() * 3 + 1))
+        this.turn = currentTurn + Math.floor((Math.random() * 2 + 2))
         this.brandModifier = this.generateModifier()
         this.didWin = undefined;
     }

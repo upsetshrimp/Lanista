@@ -25,8 +25,11 @@ export default function MainPage() {
         setBrand(bubu.brand)
     }, [])
     const resolveBattle = (stance) => {
+        
         const playerAdvantage = gladiator.martial - currentBattle?.enemyLvl
+       
         let playerVictoryThreshold = 55 + (playerAdvantage * 10)
+        
         if (stance === 'martial') {
             playerVictoryThreshold += 3 * gladiator.martial
         }
@@ -34,22 +37,34 @@ export default function MainPage() {
         // If advantage is 0, player's chances are 55%, increases/decreases with every level
         const enemyRoll = Math.floor(Math.random() * 100 + 1)
         const didPlayerWin = enemyRoll < playerVictoryThreshold
+
+        let nextHistory = gameHistory
+        if (didPlayerWin) {
+            nextHistory.wins++
+        } else {
+            nextHistory.losses++
+        }
+
+        setGameHistory(nextHistory)
+
         let shownamanshipDC = didPlayerWin ? 4 : 8
         let brandChange
-        let playerShowmanshipRoll = currentBattle.brandModifier + gladiator.showmanship * 3
+        let playerShowmanshipRoll = currentBattle.brandModifier + gladiator.showmanship * 2
+        
         if (stance === 'spectaculum') {
             playerShowmanshipRoll += gladiator.showmanship
         }
 
         brandChange = playerShowmanshipRoll - shownamanshipDC;
-        console.log(44, playerShowmanshipRoll, shownamanshipDC)
 
-        setBrand(brand + brandChange)
+        return brand + brandChange
     }
     const advanceTurn = () => {
+        let nextBrand = brand
         if (isInBattle) {
-            resolveBattle(chosenAction)
+            nextBrand = resolveBattle(chosenAction)
             setCurrentBattle(Battle.getInstance(turnCount))
+            setBrand(nextBrand)
         }
         else {
             setGladiator({ ...gladiator, [chosenAction]: ++gladiator[chosenAction] })
@@ -57,7 +72,12 @@ export default function MainPage() {
         // Advance to Next Turn
         setChosenAction(undefined)
         setTurnCount(turnCount + 1)
-        console.log(39, turnCount)
+        if (nextBrand >= 30) {
+            alert(`Victory! In ${turnCount} turns.
+            Brand: ${nextBrand},
+            Wins: ${gameHistory.wins}
+            Losses: ${gameHistory.losses}`)
+        }
     }
     return (
         <div>
@@ -71,13 +91,13 @@ export default function MainPage() {
             {isInBattle ?
                 <BattleView currentBattle={currentBattle} chosenAction={chosenAction} chooseAction={setChosenAction} /> :
                 <Train gladiator={gladiator} chosenAction={chosenAction} chooseAction={setChosenAction} />}
-                <Button
-                    disabled={!canEndTurn}
-                    onClick={advanceTurn}
-                    variant="contained"
-                    color="secondary"
-                    padding="35px"
-                >End Turn</Button>
+            <Button
+                disabled={!canEndTurn}
+                onClick={advanceTurn}
+                variant="contained"
+                color="secondary"
+                padding="35px"
+            >End Turn</Button>
         </div>
     );
 }
