@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import InitialConditions from "./Helpers/app-storage"
-import Train from "./train"
+import TrainingView from "./trainining-view"
 import Gladiator from './gladiator';
 import Battle from './Battle';
 import StatView from './stat-view'
@@ -67,7 +67,28 @@ export default function MainPage() {
             setBrand(nextBrand)
         }
         else {
-            setGladiator({ ...gladiator, [chosenAction]: ++gladiator[chosenAction] })
+            const xpPerLevel = [100, 200, 200, 400]
+
+            if (chosenAction === "martial") {
+                let martialXP = gladiator.martialXP + 100
+                let martialLevel = gladiator.martial
+                if (xpPerLevel[gladiator.martial-1] === martialXP) {
+                    martialXP = 0
+                    martialLevel++
+                }
+                setGladiator({...gladiator, martial: martialLevel, martialXP: martialXP})
+            } 
+            if (chosenAction === "showmanship"){
+                let showmanshipXP = gladiator.showmanshipXP + 100
+                let showmanshipLevel = gladiator.showmanship
+                if (xpPerLevel[gladiator.showmanship-1] === showmanshipXP) {
+                    showmanshipXP = 0
+                    showmanshipLevel++
+                }
+                setGladiator({...gladiator, showmanship: showmanshipLevel, showmanshipXP: showmanshipXP})
+            }
+            
+           // setGladiator({ ...gladiator, [chosenAction]: ++gladiator[chosenAction] }) -> RIP a beautiful implementation
         }
         // Advance to Next Turn
         setChosenAction(undefined)
@@ -89,8 +110,8 @@ export default function MainPage() {
                 gameHistory={gameHistory} />
 
             {isInBattle ?
-                <BattleView currentBattle={currentBattle} chosenAction={chosenAction} chooseAction={setChosenAction} /> :
-                <Train gladiator={gladiator} chosenAction={chosenAction} chooseAction={setChosenAction} />}
+                <BattleView gladiator={gladiator} currentBattle={currentBattle} chosenAction={chosenAction} chooseAction={setChosenAction} /> :
+                <TrainingView gladiator={gladiator} chosenAction={chosenAction} chooseAction={setChosenAction} />}
             <Button
                 disabled={!canEndTurn}
                 onClick={advanceTurn}
