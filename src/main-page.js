@@ -5,7 +5,8 @@ import Gladiator from './gladiator';
 import Battle from './Battle';
 import StatView from './stat-view'
 import BattleView from './battle-view'
-import Button from '@material-ui/core/Button';
+import { Button } from '@material-ui/core';
+import BattleResultDialog from './battle-result-dialog';
 
 
 export default function MainPage() {
@@ -15,6 +16,8 @@ export default function MainPage() {
     const [turnCount, setTurnCount] = useState(1)
     const [chosenAction, setChosenAction] = useState()
     const [currentBattle, setCurrentBattle] = useState(Battle.getInstance(1))
+    const [showBattleResult, setShowBattleResult] = useState(false)
+    const [battleResult, setBattleResult] = useState({})
     const isInBattle = turnCount === currentBattle.turn
     const canEndTurn = chosenAction !== undefined
 
@@ -25,11 +28,11 @@ export default function MainPage() {
         setBrand(bubu.brand)
     }, [])
     const resolveBattle = (stance) => {
-        
+
         const playerAdvantage = gladiator.martial - currentBattle?.enemyLvl
-       
+
         let playerVictoryThreshold = 55 + (playerAdvantage * 10)
-        
+
         if (stance === 'martial') {
             playerVictoryThreshold += 3 * gladiator.martial
         }
@@ -48,15 +51,18 @@ export default function MainPage() {
         setGameHistory(nextHistory)
 
         let shownamanshipDC = didPlayerWin ? 4 : 8
+      
         let brandChange
-        let playerShowmanshipRoll = currentBattle.brandModifier + gladiator.showmanship * 2
-        
+
+        let playerShowmanshipRoll = currentBattle.brandModifier + (gladiator.showmanship * 2) + gladiator.martial
         if (stance === 'spectaculum') {
-            playerShowmanshipRoll += gladiator.showmanship
+            playerShowmanshipRoll += Math.floor(gladiator.showmanship * 1.5)
         }
-
+        
         brandChange = playerShowmanshipRoll - shownamanshipDC;
-
+        
+        setBattleResult({ didPlayerWin, stance, enemyLvl: currentBattle.enemyLvl, brandChange })
+        
         return brand + brandChange
     }
     const advanceTurn = () => {
@@ -65,31 +71,33 @@ export default function MainPage() {
             nextBrand = resolveBattle(chosenAction)
             setCurrentBattle(Battle.getInstance(turnCount))
             setBrand(nextBrand)
+            setShowBattleResult(true)
         }
         else {
             const xpPerLevel = [100, 200, 200, 400]
-
+            
             if (chosenAction === "martial") {
                 let martialXP = gladiator.martialXP + 100
                 let martialLevel = gladiator.martial
-                if (xpPerLevel[gladiator.martial-1] === martialXP) {
+                if (xpPerLevel[gladiator.martial - 1] === martialXP) {
                     martialXP = 0
                     martialLevel++
                 }
-                setGladiator({...gladiator, martial: martialLevel, martialXP: martialXP})
-            } 
-            if (chosenAction === "showmanship"){
+                setGladiator({ ...gladiator, martial: martialLevel, martialXP: martialXP })
+            }
+            if (chosenAction === "showmanship") {
                 let showmanshipXP = gladiator.showmanshipXP + 100
                 let showmanshipLevel = gladiator.showmanship
-                if (xpPerLevel[gladiator.showmanship-1] === showmanshipXP) {
+                if (xpPerLevel[gladiator.showmanship - 1] === showmanshipXP) {
                     showmanshipXP = 0
                     showmanshipLevel++
                 }
-                setGladiator({...gladiator, showmanship: showmanshipLevel, showmanshipXP: showmanshipXP})
+                setGladiator({ ...gladiator, showmanship: showmanshipLevel, showmanshipXP: showmanshipXP })
             }
             
-           // setGladiator({ ...gladiator, [chosenAction]: ++gladiator[chosenAction] }) -> RIP a beautiful implementation
+            // setGladiator({ ...gladiator, [chosenAction]: ++gladiator[chosenAction] }) -> RIP a beautiful implementation
         }
+
         // Advance to Next Turn
         setChosenAction(undefined)
         setTurnCount(turnCount + 1)
@@ -119,6 +127,7 @@ export default function MainPage() {
                 color="secondary"
                 padding="35px"
             >End Turn</Button>
+                <BattleResultDialog battleResult={battleResult} isOpen={showBattleResult} close={() => setShowBattleResult(false)} />
         </div>
     );
 }

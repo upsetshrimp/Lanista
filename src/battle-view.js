@@ -11,8 +11,9 @@ export default function BattleView({ gladiator, currentBattle, chosenAction, cho
     if (victoryChance > 70) {
         victoryChanceString = "High"
     }
-    const brandGainUponVictory = gladiator.showmanship * 2 - 4
-    const brandGainUponDefeat = gladiator.showmanship * 2 - 8
+    const brandGainUponVictory = (gladiator.showmanship * 2) + gladiator.martial - 4
+    const brandGainUponDefeat = (gladiator.showmanship * 2) + gladiator.martial - 8
+    console.log(15, brandGainUponDefeat)
     const expectedBrandGain = ((brandGainUponVictory * victoryChance / 100) 
     + (brandGainUponDefeat * (100 - victoryChance) / 100)).toFixed(1)
 
