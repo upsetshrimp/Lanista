@@ -13,7 +13,7 @@ export default function BattleResultDialog({ battleResult, isOpen, close }) {
             <DialogTitle id="alert-dialog-title">You {didPlayerWin ? "Won" : "Lost"}!</DialogTitle>
             <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                    <p>Fighting an enemy level {enemyLvl} with a {stance} stace,</p>
+                    <p>Fighting a level {enemyLvl} enemy with a {stance} stance,</p>
                     <p>You {brandChange > 0 ? "gained " + brandChange : "lost " + brandChange * -1} brand points.</p>
                 </DialogContentText>
             </DialogContent>
