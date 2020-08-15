@@ -6,6 +6,7 @@ import Battle from './Battle';
 import StatView from './stat-view'
 import BattleView from './battle-view'
 import { Grid, Button, Paper } from '@material-ui/core';
+import BattleResultDialog from './battle-result-dialog';
 
 
 export default function MainPage() {
@@ -15,6 +16,8 @@ export default function MainPage() {
     const [turnCount, setTurnCount] = useState(1)
     const [chosenAction, setChosenAction] = useState()
     const [currentBattle, setCurrentBattle] = useState(Battle.getInstance(1))
+    const [showBattleResult, setShowBattleResult] = useState(false)
+    const [battleResult, setBattleResult] = useState({})
     const isInBattle = turnCount === currentBattle.turn
     const canEndTurn = chosenAction !== undefined
 
@@ -48,15 +51,18 @@ export default function MainPage() {
         setGameHistory(nextHistory)
 
         let shownamanshipDC = didPlayerWin ? 4 : 8
+      
         let brandChange
-        let playerShowmanshipRoll = currentBattle.brandModifier + gladiator.showmanship * 2
 
+        let playerShowmanshipRoll = currentBattle.brandModifier + (gladiator.showmanship * 2) + gladiator.martial
         if (stance === 'spectaculum') {
-            playerShowmanshipRoll += gladiator.showmanship
+            playerShowmanshipRoll += Math.floor(gladiator.showmanship * 1.5)
         }
-
+        
         brandChange = playerShowmanshipRoll - shownamanshipDC;
-
+        
+        setBattleResult({ didPlayerWin, stance, enemyLvl: currentBattle.enemyLvl, brandChange })
+        
         return brand + brandChange
     }
     const advanceTurn = () => {
@@ -65,10 +71,11 @@ export default function MainPage() {
             nextBrand = resolveBattle(chosenAction)
             setCurrentBattle(Battle.getInstance(turnCount))
             setBrand(nextBrand)
+            setShowBattleResult(true)
         }
         else {
             const xpPerLevel = [100, 200, 200, 400]
-
+            
             if (chosenAction === "martial") {
                 let martialXP = gladiator.martialXP + 100
                 let martialLevel = gladiator.martial
@@ -91,6 +98,7 @@ export default function MainPage() {
             // setGladiator({ ...gladiator, [chosenAction]: ++gladiator[chosenAction] }) -> RIP a beautiful implementation
             // press F to pay respects
         }
+
         // Advance to Next Turn
         setChosenAction(undefined)
         setTurnCount(turnCount + 1)
@@ -127,6 +135,8 @@ export default function MainPage() {
                     sizeLarge
 
                 >End Turn</Button>
-            </Grid></Grid>
-    )
+            </Grid>
+            <BattleResultDialog battleResult={battleResult} isOpen={showBattleResult} close={() => setShowBattleResult(false)} />
+            </Grid>
+    );
 }
