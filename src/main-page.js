@@ -5,7 +5,7 @@ import Gladiator from './gladiator';
 import Battle from './Battle';
 import StatView from './stat-view'
 import BattleView from './battle-view'
-import Button from '@material-ui/core/Button';
+import { Grid, Button, Paper } from '@material-ui/core';
 
 
 export default function MainPage() {
@@ -25,11 +25,11 @@ export default function MainPage() {
         setBrand(bubu.brand)
     }, [])
     const resolveBattle = (stance) => {
-        
+
         const playerAdvantage = gladiator.martial - currentBattle?.enemyLvl
-       
+
         let playerVictoryThreshold = 55 + (playerAdvantage * 10)
-        
+
         if (stance === 'martial') {
             playerVictoryThreshold += 3 * gladiator.martial
         }
@@ -50,7 +50,7 @@ export default function MainPage() {
         let shownamanshipDC = didPlayerWin ? 4 : 8
         let brandChange
         let playerShowmanshipRoll = currentBattle.brandModifier + gladiator.showmanship * 2
-        
+
         if (stance === 'spectaculum') {
             playerShowmanshipRoll += gladiator.showmanship
         }
@@ -72,23 +72,24 @@ export default function MainPage() {
             if (chosenAction === "martial") {
                 let martialXP = gladiator.martialXP + 100
                 let martialLevel = gladiator.martial
-                if (xpPerLevel[gladiator.martial-1] === martialXP) {
+                if (xpPerLevel[gladiator.martial - 1] === martialXP) {
                     martialXP = 0
                     martialLevel++
                 }
-                setGladiator({...gladiator, martial: martialLevel, martialXP: martialXP})
-            } 
-            if (chosenAction === "showmanship"){
+                setGladiator({ ...gladiator, martial: martialLevel, martialXP: martialXP })
+            }
+            if (chosenAction === "showmanship") {
                 let showmanshipXP = gladiator.showmanshipXP + 100
                 let showmanshipLevel = gladiator.showmanship
-                if (xpPerLevel[gladiator.showmanship-1] === showmanshipXP) {
+                if (xpPerLevel[gladiator.showmanship - 1] === showmanshipXP) {
                     showmanshipXP = 0
                     showmanshipLevel++
                 }
-                setGladiator({...gladiator, showmanship: showmanshipLevel, showmanshipXP: showmanshipXP})
+                setGladiator({ ...gladiator, showmanship: showmanshipLevel, showmanshipXP: showmanshipXP })
             }
-            
-           // setGladiator({ ...gladiator, [chosenAction]: ++gladiator[chosenAction] }) -> RIP a beautiful implementation
+
+            // setGladiator({ ...gladiator, [chosenAction]: ++gladiator[chosenAction] }) -> RIP a beautiful implementation
+            // press F to pay respects
         }
         // Advance to Next Turn
         setChosenAction(undefined)
@@ -101,24 +102,31 @@ export default function MainPage() {
         }
     }
     return (
-        <div>
-            <StatView
-                gladiator={gladiator}
-                currentBattle={currentBattle}
-                turnCount={turnCount}
-                brand={brand}
-                gameHistory={gameHistory} />
+        <Grid container direction='column' alignItems='center'>
+            <Grid item key={1}>
+                <StatView
+                    gladiator={gladiator}
+                    currentBattle={currentBattle}
+                    turnCount={turnCount}
+                    brand={brand}
+                    gameHistory={gameHistory} />
+            </Grid>
+            <Grid item key={2}>
+                {isInBattle ?
+                    <BattleView gladiator={gladiator} currentBattle={currentBattle} chosenAction={chosenAction} chooseAction={setChosenAction} /> :
+                    <TrainingView gladiator={gladiator} chosenAction={chosenAction} chooseAction={setChosenAction} />
+                }
+            </Grid>
+            <Grid item key={3} xs={10}>
+                <Button
+                    disabled={!canEndTurn}
+                    onClick={advanceTurn}
+                    variant="contained"
+                    color="secondary"
+                    fullWidth
+                    sizeLarge
 
-            {isInBattle ?
-                <BattleView gladiator={gladiator} currentBattle={currentBattle} chosenAction={chosenAction} chooseAction={setChosenAction} /> :
-                <TrainingView gladiator={gladiator} chosenAction={chosenAction} chooseAction={setChosenAction} />}
-            <Button
-                disabled={!canEndTurn}
-                onClick={advanceTurn}
-                variant="contained"
-                color="secondary"
-                padding="35px"
-            >End Turn</Button>
-        </div>
-    );
+                >End Turn</Button>
+            </Grid></Grid>
+    )
 }

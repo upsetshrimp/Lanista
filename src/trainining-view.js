@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Button from '@material-ui/core/Button';
+import { Grid, Button, Paper } from '@material-ui/core';
 
 
 
@@ -14,49 +14,63 @@ export default function TrainingView({ gladiator, chosenAction, chooseAction }) 
     const currentMartialPoints = gladiator.martialXP + (chosenAction === 'martial' ? 100 : 0)
 
     return (
-        <div style={{ display: "block" }}>
-            <div className="ShowmanShip">
-                <p>Points to next level: {currentShowmanshipPoints}/{pointsToNextShowmanship}</p>
-                {
-                    levels.map((level, index) =>
-                        (<Button
-                            variant={
-                                gladiator?.showmanship + 1 === level &&
-                                    chosenAction === 'showmanship' ? "contained" : "outlined"}
-                            color={gladiator?.showmanship < level ? "primary" : "secondary"}
-                            key={index}
-                            disabled={gladiator?.showmanship + 1 < level}
-                            onClick={() => {
-                                if (gladiator?.showmanship < level) {
-                                    const nextTrain = chosenAction === 'showmanship' ? undefined : 'showmanship'
-                                    chooseAction(nextTrain)
-                                }
-                            }}>
-                            {"Showmanship " + level}
-                        </Button>)
-                    )}
-            </div>
-            <div className="Martial">
-                <p>Points to next level: {currentMartialPoints}/{pointsToNextMartial}</p>
-                {
-                    levels.map((level, index) =>
-                        (<Button
-                            variant={
-                                gladiator?.martial + 1 === level &&
-                                    chosenAction === 'martial' ? "contained" : "outlined"}
-                            color={gladiator?.martial < level ? "primary" : "secondary"}
-                            key={index}
-                            disabled={gladiator?.martial + 1 < level}
-                            onClick={() => {
-                                if (gladiator?.martial < level) {
-                                    const nextTrain = chosenAction === 'martial' ? undefined : 'martial'
-                                    chooseAction(nextTrain)
-                                }
-                            }}>
-                            {"martial " + level}
-                        </Button>)
-                    )}
-            </div>
-        </div>
+        <div>
+            <Grid
+                container
+                direction="row"
+                justify="space-between"
+                alignItems="stretch"
+            >
+                <Grid item xs={6}><h2>Showmanship</h2></Grid>
+                <Grid item xs={6}><h2>Martial</h2></Grid>
+
+                <Grid item xs={6}><Paper variant="outlined">Points to next level: {currentShowmanshipPoints}/{pointsToNextShowmanship}</Paper></Grid>
+                <Grid item xs={6}><Paper variant="outlined">Points to next level: {currentMartialPoints}/{pointsToNextMartial}</Paper></Grid>
+                <Grid container item xs={6} alignItems="center" spacing={1} direction='column'>
+
+                    {
+                        levels.map((level, index) =>
+                            (<Grid item xs={6} key={index}>
+                                <Button
+                                    variant={
+                                        gladiator?.showmanship + 1 === level &&
+                                            chosenAction === 'showmanship' ? "contained" : "outlined"}
+                                    color={gladiator?.showmanship < level ? "primary" : "secondary"}
+                                    key={index}
+                                    disabled={gladiator?.showmanship + 1 < level}
+                                    onClick={() => {
+                                        if (gladiator?.showmanship < level) {
+                                            const nextTrain = chosenAction === 'showmanship' ? undefined : 'showmanship'
+                                            chooseAction(nextTrain)
+                                        }
+                                    }}>
+                                    {"Showmanship " + level}
+                                </Button></Grid>)
+                        )}
+                </Grid>
+                <Grid container item xs={6} alignItems="center" spacing={1} direction='column'>
+
+                    {
+                        levels.map((level, index) =>
+                            (<Grid item xs={6} key={index}>
+                                <Button
+                                    variant={
+                                        gladiator?.martial + 1 === level &&
+                                            chosenAction === 'martial' ? "contained" : "outlined"}
+                                    color={gladiator?.martial < level ? "primary" : "secondary"}
+                                    key={index}
+                                    disabled={gladiator?.martial + 1 < level}
+                                    onClick={() => {
+                                        if (gladiator?.martial < level) {
+                                            const nextTrain = chosenAction === 'martial' ? undefined : 'martial'
+                                            chooseAction(nextTrain)
+                                        }
+                                    }}>
+                                    {"martial " + level}
+                                </Button></Grid>)
+                        )}
+                </Grid>
+            </Grid>
+        </div >
     )
 }
