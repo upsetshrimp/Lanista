@@ -1,5 +1,13 @@
 .App {
   text-align: center;
+  font-family: 'Papyrus';
+}
+body {
+  font-family: Algerian, Serif;
+}
+h1 {
+  text-align: center;
+  font-size: 2em;
 }
 
 .App-logo {
@@ -26,13 +34,4 @@
 
 .App-link {
   color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }

@@ -1,38 +1,28 @@
 import React from 'react';
 import { Grid, Paper } from '@material-ui/core';
-import { Box } from '@material-ui/core';
-
-
-
 
 export default function StatView({ gladiator, currentBattle, turnCount, brand, gameHistory }) {
-
-
-
-
-    const divstyleleft = { width: "30%", display: "grid", padding: "20px" }
     const timeToNextBattle = currentBattle?.turn - turnCount
     return (
         <>
-
             <Paper>
-                < header style={{ textAlign: "center" }}> {gladiator?.name ?? null}</header >
+                <h1> {gladiator?.name ?? null} </h1>
             </Paper>
-
-            <div style={{ display: "flex" , flexGrow: 1, padding: '20px'}}>
-                <Paper>
-                <h3 style={{ textAlign: "center", marginTop: 0 }}>Game Stats</h3>
-                        Brand:&nbsp;{brand}<br/>
-                        Wins:&nbsp;{gameHistory.wins}<br/>
-                        Losses:&nbsp;{gameHistory.losses}<br/>
+            <br />
+            <Grid container spacing={3}>
+                <Grid item xs={4}><Paper style={{padding: '10px'}}>
+                    <h3 style={{ textAlign: "center", marginTop: 0 }}>Game Stats</h3>
+                        Brand:&nbsp;{brand}<br />
+                        Wins:&nbsp;{gameHistory.wins}<br />
+                        Losses:&nbsp;{gameHistory.losses}<br />
                         Turn:&nbsp;{turnCount}
-                </Paper>
-                <Paper elevation='3' s>
-                    <h3 style={{ textAlign: "center", marginTop: 0 }}>Stats</h3>
-                        Showmanship:&nbsp;{gladiator.showmanship}<br/>
+                </Paper></Grid>
+                <Grid item xs={4}><Paper elevation={3} style={{padding: '10px'}}>
+                    <h3 style={{ textAlign: "center", marginTop: 0 }}>Gladiator</h3>
+                        Showmanship:&nbsp;{gladiator.showmanship}<br />
                         Martial:&nbsp;{gladiator.martial}
-                </Paper>
-                <Paper>
+                </Paper></Grid>
+                <Grid item xs={4}> <Paper style={{padding: '10px'}}>
                     <h3 style={{ textAlign: "center", marginTop: 0 }}>Next Battle</h3>
                     <span>Enemy Level: </span>
                     <span>{currentBattle.enemyLvl}</span>
@@ -42,8 +32,8 @@ export default function StatView({ gladiator, currentBattle, turnCount, brand, g
                     {timeToNextBattle} Turn
                     {timeToNextBattle === 1 ? null : 's'}
                     </span>
-                </Paper>
-            </div>
+                </Paper></Grid>
+            </Grid>
 
         </>
     )
