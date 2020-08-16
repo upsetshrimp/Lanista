@@ -51,52 +51,62 @@ export default function MainPage() {
         setGameHistory(nextHistory)
 
         let shownamanshipDC = didPlayerWin ? 4 : 8
-      
+
         let brandChange
 
         let playerShowmanshipRoll = currentBattle.brandModifier + (gladiator.showmanship * 2) + gladiator.martial
         if (stance === 'spectaculum') {
             playerShowmanshipRoll += Math.floor(gladiator.showmanship * 1.5)
         }
-        
+
         brandChange = playerShowmanshipRoll - shownamanshipDC;
-        
+
         setBattleResult({ didPlayerWin, stance, enemyLvl: currentBattle.enemyLvl, brandChange })
-        
+
         return brand + brandChange
+    }
+    const resolveTraining = () => {
+        const xpPerLevel = [100, 200, 200, 400]
+
+        if (chosenAction === "martial") {
+            let martialXP = gladiator.martialXP + 100
+            let martialLevel = gladiator.martial
+            if (xpPerLevel[gladiator.martial - 1] === martialXP) {
+                martialXP = 0
+                martialLevel++
+            }
+            return { martial: martialLevel, martialXP: martialXP }
+        }
+        if (chosenAction === "showmanship") {
+            let showmanshipXP = gladiator.showmanshipXP + 100
+            let showmanshipLevel = gladiator.showmanship
+            if (xpPerLevel[gladiator.showmanship - 1] === showmanshipXP) {
+                showmanshipXP = 0
+                showmanshipLevel++
+            }
+            return { showmanship: showmanshipLevel, showmanshipXP: showmanshipXP }
+        }
     }
     const advanceTurn = () => {
         let nextBrand = brand
         if (isInBattle) {
-            nextBrand = resolveBattle(chosenAction)
+            const playerAdvantage = Battle.playerAdvantage(gladiator.martial, currentBattle.enemyLvl)
+            const didPlayerWin = Battle.resolveBattle(playerAdvantage, gladiator, chosenAction === "martial")
+            nextBrand = Battle.resolveBrandChange(didPlayerWin, playerAdvantage, gladiator, chosenAction === "spectaculum")
+
+            let nextGameHistory = gameHistory
+            didPlayerWin ? nextGameHistory.wins++ : nextGameHistory.losses++
+            setGameHistory(nextGameHistory)
+
             setCurrentBattle(Battle.getInstance(turnCount))
+            
             setBrand(nextBrand)
+            setBattleResult({ didPlayerWin, stance: chosenAction, enemyLvl: currentBattle.enemyLvl, brandChange: nextBrand })
             setShowBattleResult(true)
         }
         else {
-            const xpPerLevel = [100, 200, 200, 400]
-            
-            if (chosenAction === "martial") {
-                let martialXP = gladiator.martialXP + 100
-                let martialLevel = gladiator.martial
-                if (xpPerLevel[gladiator.martial - 1] === martialXP) {
-                    martialXP = 0
-                    martialLevel++
-                }
-                setGladiator({ ...gladiator, martial: martialLevel, martialXP: martialXP })
-            }
-            if (chosenAction === "showmanship") {
-                let showmanshipXP = gladiator.showmanshipXP + 100
-                let showmanshipLevel = gladiator.showmanship
-                if (xpPerLevel[gladiator.showmanship - 1] === showmanshipXP) {
-                    showmanshipXP = 0
-                    showmanshipLevel++
-                }
-                setGladiator({ ...gladiator, showmanship: showmanshipLevel, showmanshipXP: showmanshipXP })
-            }
-
-            // setGladiator({ ...gladiator, [chosenAction]: ++gladiator[chosenAction] }) -> RIP a beautiful implementation
-            // press F to pay respects
+            const gladiatorChange = resolveTraining()
+            setGladiator({ ...gladiator, ...gladiatorChange }) // Beautiful implementation restored!
         }
 
         // Advance to Next Turn
@@ -137,6 +147,6 @@ export default function MainPage() {
                 >End Turn</Button>
             </Grid>
             <BattleResultDialog battleResult={battleResult} isOpen={showBattleResult} close={() => setShowBattleResult(false)} />
-            </Grid>
+        </Grid>
     );
 }

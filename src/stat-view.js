@@ -10,7 +10,6 @@ export default function StatView({ gladiator, currentBattle, turnCount, brand, g
 
 
 
-    const divstyleleft = { width: "30%", display: "grid", padding: "20px" }
     const timeToNextBattle = currentBattle?.turn - turnCount
     return (
         <>
@@ -22,7 +21,7 @@ export default function StatView({ gladiator, currentBattle, turnCount, brand, g
             <div style={{ display: "flex" , flexGrow: 1, padding: '20px'}}>
                 <Paper>
                 <h3 style={{ textAlign: "center", marginTop: 0 }}>Game Stats</h3>
-                        Brand:&nbsp;{brand}<br/>
+                        Brand:&nbsp;{brand}/30<br/>
                         Wins:&nbsp;{gameHistory.wins}<br/>
                         Losses:&nbsp;{gameHistory.losses}<br/>
                         Turn:&nbsp;{turnCount}
