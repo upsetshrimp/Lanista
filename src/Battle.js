@@ -16,15 +16,21 @@ export default class Battle {
     }
     static playerAdvantage = (playerMartial, enemyMartial) => playerMartial - enemyMartial
 
+    static martialStanceBonus = (stanceIsAggressive, martialLevel) => stanceIsAggressive ? 3 * martialLevel : 0
     
-    static resolveBattle = (playerAdvantage, gladiator, stanceIsMartial) => {
+    static playerVictoryChance = (playerMartial, enemyMartial, stanceIsAggressive, martialLevel) =>
+        55 + (this.playerAdvantage(playerMartial, enemyMartial) * 10) + this.martialStanceBonus(stanceIsAggressive, martialLevel)
+
+    static getBattleResult = (enemyMartial, gladiator, stance) => {
+        const didPlayerWin = this.getDidPlayerWin(enemyMartial, gladiator, stance === "aggressive")
+        const brandChange = this.getBrandChange(didPlayerWin, enemyMartial, gladiator, stance === "spectaculum", this.generateModifier())
+        return { didPlayerWin, brandChange }
+    }
+
+    static getDidPlayerWin = (enemyMartial, gladiator, stanceIsAggressive) => {
 
         // If advantage is 0, player's chances are 55%, increases/decreases by 10 with every level
-        let playerVictoryThreshold = 55 + (playerAdvantage * 10)
-
-        if (stanceIsMartial) {
-            playerVictoryThreshold += 3 * gladiator.martial
-        }
+        let playerVictoryThreshold = this.playerVictoryChance(gladiator.martial, enemyMartial, stanceIsAggressive, gladiator.martial)
 
         const enemyRoll = Math.floor(Math.random() * 100 + 1)
         const didPlayerWin = enemyRoll < playerVictoryThreshold
@@ -32,19 +38,18 @@ export default class Battle {
         console.log(31, playerVictoryThreshold, didPlayerWin)
         return didPlayerWin
     }
-    static resolveBrandChange = (didPlayerWin, playerAdvantage, gladiator, stanceIsSpectaculum) => {
+    static getBrandChange = (didPlayerWin, enemyMartial, gladiator, stanceIsSpectaculum, brandModifier) => {
         let brandChange
 
         let shownamanshipDC = didPlayerWin ? 4 : 8
 
-        let playerShowmanshipRoll = this.generateModifier() + (gladiator.showmanship * 2) + gladiator.martial
+        let playerShowmanshipRoll = brandModifier + (gladiator.showmanship * 2) + gladiator.martial
         if (stanceIsSpectaculum) {
             playerShowmanshipRoll += Math.floor(gladiator.showmanship * 1.5)
         }
 
         brandChange = playerShowmanshipRoll - shownamanshipDC;
 
-        console.log(46, stanceIsSpectaculum, brandChange)
         return brandChange
     }
     static generateModifier = () => {

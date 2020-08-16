@@ -4,17 +4,10 @@ import {Grid} from '@material-ui/core'
 import Battle from './Battle';
 
 export default function BattleView({ gladiator, currentBattle, chosenAction, chooseAction }) {
-    const victoryChance = 55 + (gladiator.martial - currentBattle.enemyLvl) * 10
-    let victoryChanceString = "Low"
-    if (victoryChance > 40) {
-        victoryChanceString = "Medium"
-    }
-    if (victoryChance > 70) {
-        victoryChanceString = "High"
-    }
-    const playerAdvantage = Battle.playerAdvantage(gladiator.martial, currentBattle.enemyLvl)
-    const brandGainUponVictory = Battle.resolveBrandChange(true, playerAdvantage, gladiator, false)
-    const brandGainUponDefeat = Battle.resolveBrandChange(false, playerAdvantage, gladiator, false)
+    const victoryChance = Battle.playerVictoryChance(gladiator.martial, currentBattle.enemyLvl, chosenAction === "aggressive", gladiator.martial)
+
+    const brandGainUponVictory = Battle.getBrandChange(true, currentBattle.enemyLvl, gladiator, chosenAction === "spectaculum", 0)
+    const brandGainUponDefeat = Battle.getBrandChange(false, currentBattle.enemyLvl, gladiator, chosenAction === "spectaculum", 0)
     
    
     return (
@@ -50,7 +43,7 @@ export default function BattleView({ gladiator, currentBattle, chosenAction, cho
 
             </div>
             <div style={{ textAlign: "center" }}>
-                <div>Victory Chance: {victoryChanceString}</div>
+                <div>Victory Chance: {victoryChance}%</div>
                 <div>Expected Brand Gain Upon Victory: ~{brandGainUponVictory}</div>
                 <div>Expected Brand Gain Upon Defeat: ~{brandGainUponDefeat}</div>
                 {chosenAction === "spectaculum" ? <span>Bonus per Showmanship level</span> : null}
