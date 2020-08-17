@@ -5,8 +5,9 @@ import Gladiator from './gladiator';
 import Battle from './Battle';
 import StatView from './stat-view'
 import BattleView from './battle-view'
-import { Grid, Button, Paper } from '@material-ui/core';
+import { Grid, Button, Switch } from '@material-ui/core';
 import BattleResultDialog from './battle-result-dialog';
+import TrainingResultDialog from './training-result-dialog'
 
 
 export default function MainPage() {
@@ -18,6 +19,7 @@ export default function MainPage() {
     const [currentBattle, setCurrentBattle] = useState(Battle.getInstance(1))
     const [showBattleResult, setShowBattleResult] = useState(false)
     const [battleResult, setBattleResult] = useState({})
+    const [showTrainingResult, setShowTrainingResult] = useState(undefined)
     const isInBattle = turnCount === currentBattle.turn
     const canEndTurn = chosenAction !== undefined
 
@@ -49,6 +51,7 @@ export default function MainPage() {
         else {
             const gladiatorChange = Gladiator.resolveTraining(chosenAction, gladiator)
             setGladiator({ ...gladiator, ...gladiatorChange }) // Beautiful implementation restored!
+            setShowTrainingResult(chosenAction)
         }
 
         // Advance to Next Turn
@@ -83,6 +86,7 @@ export default function MainPage() {
                 >End Turn</Button>
             </Grid>
             <BattleResultDialog battleResult={battleResult} isOpen={showBattleResult} close={() => setShowBattleResult(false)} />
+            <TrainingResultDialog gladiator={gladiator} ability={showTrainingResult} isOpen={showTrainingResult} close={() => setShowTrainingResult(undefined)} />
         </Grid>
     );
 }

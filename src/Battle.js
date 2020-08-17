@@ -16,10 +16,15 @@ export default class Battle {
     }
     static playerAdvantage = (playerMartial, enemyMartial) => playerMartial - enemyMartial
 
-    static martialStanceBonus = (stanceIsAggressive, martialLevel) => stanceIsAggressive ? 3 * martialLevel : 0
-    
-    static playerVictoryChance = (playerMartial, enemyMartial, stanceIsAggressive, martialLevel) =>
-        55 + (this.playerAdvantage(playerMartial, enemyMartial) * 10) + this.martialStanceBonus(stanceIsAggressive, martialLevel)
+    static playerVictoryChance = (playerMartial, enemyMartial, stanceIsAggressive, martialLevel) => {
+        const martialStanceBonus = (stanceIsAggressive, martialLevel) => stanceIsAggressive ? 5 * martialLevel : 0
+
+        let victoryChance = 55
+        victoryChance += this.playerAdvantage(playerMartial, enemyMartial) * 10
+        victoryChance += martialStanceBonus(stanceIsAggressive, martialLevel)
+
+        return victoryChance
+    }
 
     static getBattleResult = (enemyMartial, gladiator, stance) => {
         const didPlayerWin = this.getDidPlayerWin(enemyMartial, gladiator, stance === "aggressive")
@@ -35,22 +40,34 @@ export default class Battle {
         const enemyRoll = Math.floor(Math.random() * 100 + 1)
         const didPlayerWin = enemyRoll < playerVictoryThreshold
 
-        console.log(31, playerVictoryThreshold, didPlayerWin)
         return didPlayerWin
     }
     static getBrandChange = (didPlayerWin, enemyMartial, gladiator, stanceIsSpectaculum, brandModifier) => {
-        let brandChange
 
-        let shownamanshipDC = didPlayerWin ? 4 : 8
+        let shownamanshipDC = didPlayerWin ? 5 : 10
 
         let playerShowmanshipRoll = brandModifier + (gladiator.showmanship * 2) + gladiator.martial
-        if (stanceIsSpectaculum) {
-            playerShowmanshipRoll += Math.floor(gladiator.showmanship * 1.5)
+
+        const spectaculumStanceBonus = stanceIsSpectaculum ? Math.ceil(gladiator.showmanship * 0.6) : 0
+
+        playerShowmanshipRoll += spectaculumStanceBonus
+
+        const playerResult = playerShowmanshipRoll - shownamanshipDC
+        
+        const playerAdvantage = this.playerAdvantage(gladiator.martial, enemyMartial)
+
+        // A range from -4 to 4, multiplying the excitement factor
+        //const surprisingResult = didPlayerWin ? playerAdvantage * -1 : playerAdvantage
+
+        //const brandChange = didPlayerWin ? surprisingResult + playerResult : playerResult - surprisingResult
+
+        const surprisingResult = playerAdvantage * -1
+
+        if (!didPlayerWin && surprisingResult > 0 && surprisingResult + playerResult >= 0) {
+            return playerResult > 0 ? playerResult : 0
         }
-
-        brandChange = playerShowmanshipRoll - shownamanshipDC;
-
-        return brandChange
+        console.log(62, surprisingResult, playerResult)
+        return surprisingResult + playerResult
     }
     static generateModifier = () => {
         const seed = Math.floor(Math.random() * 10 + 1)
