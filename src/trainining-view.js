@@ -21,8 +21,8 @@ export default function TrainingView({ gladiator, chosenAction, chooseAction }) 
                 justify="center"
                 spacing={2}
             >
-                <Grid item xs={6}><h2 style={{ textAlign: 'center' }}>Showmanship</h2></Grid>
-                <Grid item xs={6}><h2 style={{ textAlign: 'center' }}>Martial</h2></Grid>
+                <Grid item xs={12}><h2 style={{ textAlign: 'center' }}>Training</h2></Grid>
+                
 
                 <Grid item xs={4}><Paper
                     elevation={3}

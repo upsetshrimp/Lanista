@@ -19,9 +19,10 @@ export default function BattleView({ gladiator, currentBattle, chosenAction, cho
 
     return (
         <div>
-            <span>EnemyLevel: {currentBattle.enemyLvl}</span>
+            <h1 style={{textAlign: 'center'}}>Battle!</h1>
+            <span>Enemy Level: {currentBattle.enemyLvl}</span>
             <br />
-            <span>Choose your Battle Stance!</span>
+            <span style={{textAlign: 'center'}}>      Choose your Battle Stance!</span>
             <br />
             <br />
             <div style={{ display: "flex" }}>

@@ -117,7 +117,8 @@ export default function MainPage() {
                     currentBattle={currentBattle}
                     turnCount={turnCount}
                     brand={brand}
-                    gameHistory={gameHistory} />
+                    gameHistory={gameHistory}
+                    isInBattle={isInBattle} />
             </Grid>
             <hr/>
             <Grid item key={2}>
