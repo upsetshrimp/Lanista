@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Grid, Button, Paper } from '@material-ui/core';
 import Gladiator from './gladiator';
 
@@ -17,14 +17,23 @@ export default function TrainingView({ gladiator, chosenAction, chooseAction }) 
             <Grid
                 container
                 direction="row"
-                justify="space-between"
-                alignItems="stretch"
+                justify="center"
+                spacing={2}
             >
-                <Grid item xs={6}><h2>Showmanship</h2></Grid>
-                <Grid item xs={6}><h2>Martial</h2></Grid>
+                <Grid item xs={6}><h2 style={{ textAlign: 'center' }}>Showmanship</h2></Grid>
+                <Grid item xs={6}><h2 style={{ textAlign: 'center' }}>Martial</h2></Grid>
 
-                <Grid item xs={6}><Paper variant="outlined">Points to next level: {currentShowmanshipPoints}/{pointsToNextShowmanship}</Paper></Grid>
-                <Grid item xs={6}><Paper variant="outlined">Points to next level: {currentMartialPoints}/{pointsToNextMartial}</Paper></Grid>
+                <Grid item xs={4}><Paper
+                    elevation={3}
+                    style={{ textAlign: 'center', padding:'5px' }}>
+                    Points to next level: {currentShowmanshipPoints}/{pointsToNextShowmanship}
+                </Paper></Grid>
+                <Grid item xs={2}></Grid>
+                <Grid item xs={4}><Paper
+                    elevation={3}
+                    style={{ textAlign: 'center', padding: '5px' }}>
+                    Points to next level: {currentMartialPoints}/{pointsToNextMartial}
+                </Paper></Grid>
                 <Grid container item xs={6} alignItems="center" spacing={1} direction='column'>
 
                     <Button

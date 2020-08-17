@@ -5,7 +5,7 @@ import Gladiator from './gladiator';
 import Battle from './Battle';
 import StatView from './stat-view'
 import BattleView from './battle-view'
-import { Grid, Button, Switch } from '@material-ui/core';
+import { Grid, Button } from '@material-ui/core';
 import BattleResultDialog from './battle-result-dialog';
 import TrainingResultDialog from './training-result-dialog'
 
@@ -60,7 +60,7 @@ export default function MainPage() {
     }
     return (
         <Grid container direction='column' alignItems='center'>
-            <Grid item key={1}>
+            <Grid item key={1} xs={12}>
                 <StatView
                     gladiator={gladiator}
                     currentBattle={currentBattle}
@@ -68,6 +68,7 @@ export default function MainPage() {
                     brand={brand}
                     gameHistory={gameHistory} />
             </Grid>
+            <hr/>
             <Grid item key={2}>
                 {isInBattle ?
                     <BattleView gladiator={gladiator} currentBattle={currentBattle} chosenAction={chosenAction} chooseAction={setChosenAction} /> :
@@ -81,7 +82,6 @@ export default function MainPage() {
                     variant="contained"
                     color="secondary"
                     fullWidth
-                    sizeLarge
 
                 >End Turn</Button>
             </Grid>
