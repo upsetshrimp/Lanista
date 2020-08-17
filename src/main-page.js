@@ -7,6 +7,7 @@ import StatView from './stat-view'
 import BattleView from './battle-view'
 import { Grid, Button } from '@material-ui/core';
 import BattleResultDialog from './battle-result-dialog';
+import TrainingResultDialog from './training-result-dialog'
 
 
 export default function MainPage() {
@@ -18,6 +19,7 @@ export default function MainPage() {
     const [currentBattle, setCurrentBattle] = useState(Battle.getInstance(1))
     const [showBattleResult, setShowBattleResult] = useState(false)
     const [battleResult, setBattleResult] = useState({})
+    const [showTrainingResult, setShowTrainingResult] = useState(undefined)
     const isInBattle = turnCount === currentBattle.turn
     const canEndTurn = chosenAction !== undefined
 
@@ -27,87 +29,34 @@ export default function MainPage() {
         setGameHistory({ wins: bubu.wins, losses: bubu.losses })
         setBrand(bubu.brand)
     }, [])
-    const resolveBattle = (stance) => {
-
-        const playerAdvantage = gladiator.martial - currentBattle?.enemyLvl
-
-        let playerVictoryThreshold = 55 + (playerAdvantage * 10)
-
-        if (stance === 'martial') {
-            playerVictoryThreshold += 3 * gladiator.martial
-        }
-
-        // If advantage is 0, player's chances are 55%, increases/decreases with every level
-        const enemyRoll = Math.floor(Math.random() * 100 + 1)
-        const didPlayerWin = enemyRoll < playerVictoryThreshold
-
-        let nextHistory = gameHistory
-        if (didPlayerWin) {
-            nextHistory.wins++
-        } else {
-            nextHistory.losses++
-        }
-
-        setGameHistory(nextHistory)
-
-        let shownamanshipDC = didPlayerWin ? 4 : 8
-      
-        let brandChange
-
-        let playerShowmanshipRoll = currentBattle.brandModifier + (gladiator.showmanship * 2) + gladiator.martial
-        if (stance === 'spectaculum') {
-            playerShowmanshipRoll += Math.floor(gladiator.showmanship * 1.5)
-        }
-        
-        brandChange = playerShowmanshipRoll - shownamanshipDC;
-        
-        setBattleResult({ didPlayerWin, stance, enemyLvl: currentBattle.enemyLvl, brandChange })
-        
-        return brand + brandChange
-    }
     const advanceTurn = () => {
-        let nextBrand = brand
         if (isInBattle) {
-            nextBrand = resolveBattle(chosenAction)
+            const { didPlayerWin, brandChange } = Battle.getBattleResult(currentBattle.enemyLvl, gladiator, chosenAction)
+            let nextGameHistory = gameHistory
+            didPlayerWin ? nextGameHistory.wins++ : nextGameHistory.losses++
+
+            setGameHistory(nextGameHistory)
             setCurrentBattle(Battle.getInstance(turnCount))
-            setBrand(nextBrand)
+            setBrand(brand + brandChange)
+            setBattleResult({ didPlayerWin, stance: chosenAction, enemyLvl: currentBattle.enemyLvl, brandChange })
             setShowBattleResult(true)
+
+            if (brand + brandChange >= 30) {
+                alert(`Victory! In ${turnCount} turns.
+                Brand: ${brand + brandChange},
+                Wins: ${gameHistory.wins}
+                Losses: ${gameHistory.losses}`)
+            }
         }
         else {
-            const xpPerLevel = [100, 200, 200, 400]
-            
-            if (chosenAction === "martial") {
-                let martialXP = gladiator.martialXP + 100
-                let martialLevel = gladiator.martial
-                if (xpPerLevel[gladiator.martial - 1] === martialXP) {
-                    martialXP = 0
-                    martialLevel++
-                }
-                setGladiator({ ...gladiator, martial: martialLevel, martialXP: martialXP })
-            }
-            if (chosenAction === "showmanship") {
-                let showmanshipXP = gladiator.showmanshipXP + 100
-                let showmanshipLevel = gladiator.showmanship
-                if (xpPerLevel[gladiator.showmanship - 1] === showmanshipXP) {
-                    showmanshipXP = 0
-                    showmanshipLevel++
-                }
-                setGladiator({ ...gladiator, showmanship: showmanshipLevel, showmanshipXP: showmanshipXP })
-            }
-
-            // setGladiator({ ...gladiator, [chosenAction]: ++gladiator[chosenAction] }) -> RIP a beautiful implementation
-            // press F to pay respects
+            const gladiatorChange = Gladiator.resolveTraining(chosenAction, gladiator)
+            setGladiator({ ...gladiator, ...gladiatorChange }) // Beautiful implementation restored!
+            setShowTrainingResult(chosenAction)
         }
 
         // Advance to Next Turn
         setChosenAction(undefined)
         setTurnCount(turnCount + 1)
-        if (nextBrand >= 30) {
-            alert(`Victory! In ${turnCount} turns.
-            Brand: ${nextBrand},
-            Wins: ${gameHistory.wins}
-            Losses: ${gameHistory.losses}`)
-        }
     }
     return (
         <Grid container direction='column' alignItems='center'>
@@ -138,6 +87,7 @@ export default function MainPage() {
                 >End Turn</Button>
             </Grid>
             <BattleResultDialog battleResult={battleResult} isOpen={showBattleResult} close={() => setShowBattleResult(false)} />
-            </Grid>
+            <TrainingResultDialog gladiator={gladiator} ability={showTrainingResult} isOpen={showTrainingResult} close={() => setShowTrainingResult(undefined)} />
+        </Grid>
     );
 }

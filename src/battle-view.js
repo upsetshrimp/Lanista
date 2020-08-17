@@ -1,22 +1,15 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
 import {Grid} from '@material-ui/core'
+import Battle from './Battle';
 
 export default function BattleView({ gladiator, currentBattle, chosenAction, chooseAction }) {
-    const victoryChance = 55 + (gladiator.martial - currentBattle.enemyLvl) * 10
-    let victoryChanceString = "Low"
-    if (victoryChance > 40) {
-        victoryChanceString = "Medium"
-    }
-    if (victoryChance > 70) {
-        victoryChanceString = "High"
-    }
-    const brandGainUponVictory = (gladiator.showmanship * 2) + gladiator.martial - 4
-    const brandGainUponDefeat = (gladiator.showmanship * 2) + gladiator.martial - 8
-    console.log(15, brandGainUponDefeat)
-    const expectedBrandGain = ((brandGainUponVictory * victoryChance / 100)
-        + (brandGainUponDefeat * (100 - victoryChance) / 100)).toFixed(1)
+    const victoryChance = Battle.playerVictoryChance(gladiator.martial, currentBattle.enemyLvl, chosenAction === "aggressive", gladiator.martial)
 
+    const brandGainUponVictory = Battle.getBrandChange(true, currentBattle.enemyLvl, gladiator, chosenAction === "spectaculum", 0)
+    const brandGainUponDefeat = Battle.getBrandChange(false, currentBattle.enemyLvl, gladiator, chosenAction === "spectaculum", 0)
+    
+   
     return (
         <div>
             <h1 style={{textAlign: 'center'}}>Battle!</h1>
@@ -51,8 +44,9 @@ export default function BattleView({ gladiator, currentBattle, chosenAction, cho
 
             </div>
             <div style={{ textAlign: "center" }}>
-                <div>Victory Chance: {victoryChanceString}</div>
-                <div>Expected Brand Gain: ~{expectedBrandGain}</div>
+                <div>Victory Chance: {victoryChance}%</div>
+                <div>Expected Brand Gain Upon Victory: ~{brandGainUponVictory}</div>
+                <div>Expected Brand Gain Upon Defeat: ~{brandGainUponDefeat}</div>
                 {chosenAction === "spectaculum" ? <span>Bonus per Showmanship level</span> : null}
                 {chosenAction === "aggressive" ? <span>Bonus per Martial level</span> : null}
             </div>

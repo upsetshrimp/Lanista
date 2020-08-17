@@ -1,7 +1,12 @@
 import React from 'react';
 import { Grid, Paper } from '@material-ui/core';
 
+<<<<<<< HEAD
 export default function StatView({ gladiator, currentBattle, turnCount, brand, gameHistory, isInBattle }) {
+=======
+export default function StatView({ gladiator, currentBattle, turnCount, brand, gameHistory }) {
+
+>>>>>>> ffb99e4d3e60e01cde89b39ce63e6aba29787297
     const timeToNextBattle = currentBattle?.turn - turnCount
     const gridItemSize = isInBattle ? 6 : 4
     return (
