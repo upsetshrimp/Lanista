@@ -2,6 +2,7 @@ import React from 'react';
 import { Grid, Paper } from '@material-ui/core';
 
 export default function StatView({ gladiator, currentBattle, turnCount, brand, gameHistory }) {
+
     const timeToNextBattle = currentBattle?.turn - turnCount
     return (
         <>
