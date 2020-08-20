@@ -26,13 +26,13 @@ export default function TrainingView({ gladiator, chosenAction, chooseAction }) 
                 <Grid item xs={4}><Paper
                     elevation={3}
                     style={{ textAlign: 'center', padding:'5px' }}>
-                    Points to next level: {currentShowmanshipPoints}/{pointsToNextShowmanship}
+                    Points to next Showmanship level: {currentShowmanshipPoints}/{pointsToNextShowmanship}
                 </Paper></Grid>
                 <Grid item xs={2}></Grid>
                 <Grid item xs={4}><Paper
                     elevation={3}
                     style={{ textAlign: 'center', padding: '5px' }}>
-                    Points to next level: {currentMartialPoints}/{pointsToNextMartial}
+                    Points to next Martial level: {currentMartialPoints}/{pointsToNextMartial}
                 </Paper></Grid>
                 <Grid container item xs={6} alignItems="center" spacing={1} direction='column'>
 

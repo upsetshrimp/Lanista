@@ -17,7 +17,7 @@ export default class Battle {
     static playerAdvantage = (playerMartial, enemyMartial) => playerMartial - enemyMartial
 
     static playerVictoryChance = (playerMartial, enemyMartial, stanceIsAggressive, martialLevel) => {
-        const martialStanceBonus = (stanceIsAggressive, martialLevel) => stanceIsAggressive ? 5 * martialLevel : 0
+        const martialStanceBonus = (stanceIsAggressive, martialLevel) => stanceIsAggressive ? 8 * martialLevel : 0
 
         let victoryChance = 55
         victoryChance += this.playerAdvantage(playerMartial, enemyMartial) * 10
@@ -66,7 +66,10 @@ export default class Battle {
         if (!didPlayerWin && surprisingResult > 0 && surprisingResult + playerResult >= 0) {
             return playerResult > 0 ? playerResult : 0
         }
-        console.log(62, surprisingResult, playerResult)
+        let brandChange = surprisingResult + playerResult;
+        if ((!didPlayerWin && brandChange > 0) || (didPlayerWin && brandChange < 0)) {
+            brandChange = 0;
+        }
         return surprisingResult + playerResult
     }
     static generateModifier = () => {
