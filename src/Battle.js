@@ -61,12 +61,12 @@ export default class Battle {
 
         //const brandChange = didPlayerWin ? surprisingResult + playerResult : playerResult - surprisingResult
 
-        const surprisingResult = playerAdvantage * -1
+        let surprisingResult = playerAdvantage * -1.5
+        surprisingResult = surprisingResult > 0 ? Math.floor(surprisingResult) : Math.ceil(surprisingResult)
 
         if (!didPlayerWin && surprisingResult > 0 && surprisingResult + playerResult >= 0) {
             return playerResult > 0 ? playerResult : 0
         }
-        console.log(62, surprisingResult, playerResult)
         return surprisingResult + playerResult
     }
     static generateModifier = () => {

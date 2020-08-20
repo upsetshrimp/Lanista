@@ -81,7 +81,7 @@ export default function MainPage() {
                     onClick={advanceTurn}
                     variant="contained"
                     color="secondary"
-                    fullWidth
+                    size="large"
 
                 >End Turn</Button>
             </Grid>
