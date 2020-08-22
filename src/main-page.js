@@ -16,7 +16,7 @@ export default function MainPage() {
     const [brand, setBrand] = useState()
     const [turnCount, setTurnCount] = useState(1)
     const [chosenAction, setChosenAction] = useState()
-    const [currentBattle, setCurrentBattle] = useState(Battle.getInstance(1))
+    const [currentBattle, setCurrentBattle] = useState(Battle.getInstance(0, 1))
     const [showBattleResult, setShowBattleResult] = useState(false)
     const [battleResult, setBattleResult] = useState({})
     const [showTrainingResult, setShowTrainingResult] = useState(undefined)
@@ -36,12 +36,12 @@ export default function MainPage() {
             didPlayerWin ? nextGameHistory.wins++ : nextGameHistory.losses++
 
             setGameHistory(nextGameHistory)
-            setCurrentBattle(Battle.getInstance(turnCount))
+            setCurrentBattle(Battle.getInstance(turnCount, gladiator.martial))
             setBrand(brand + brandChange)
             setBattleResult({ didPlayerWin, stance: chosenAction, enemyLvl: currentBattle.enemyLvl, brandChange })
             setShowBattleResult(true)
 
-            if (brand + brandChange >= 30) {
+            if (brand + brandChange >= Battle.gameGoal) {
                 alert(`Victory! In ${turnCount} turns.
                 Brand: ${brand + brandChange},
                 Wins: ${gameHistory.wins}
@@ -66,7 +66,8 @@ export default function MainPage() {
                     currentBattle={currentBattle}
                     turnCount={turnCount}
                     brand={brand}
-                    gameHistory={gameHistory} />
+                    gameHistory={gameHistory}
+                    isInBattle={isInBattle} />
             </Grid>
             <hr/>
             <Grid item key={2}>

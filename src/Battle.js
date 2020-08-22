@@ -1,14 +1,18 @@
 export default class Battle {
     static instance = null
-    static previousTurn = 0
-    constructor(currentTurn) {
-        this.enemyLvl = Math.floor(Math.random() * 5 + 1)
-        this.turn = currentTurn + Math.floor((Math.random() * 1 + 2))
+    static previousTurn = -1
+    static gameGoal = 70
+    constructor(currentTurn, gladiatorLevel) {
+
+        const minLevel = gladiatorLevel > 5 ? gladiatorLevel - 4 : 1
+        const maxLevel = gladiatorLevel < 4 ? gladiatorLevel + 4 : 8
+        this.enemyLvl = Math.floor(Math.random() * maxLevel + minLevel)
+        this.turn = currentTurn + Math.floor((Math.random() * 2 + 2))
         this.didWin = undefined;
     }
-    static getInstance = currentTurn => {
+    static getInstance = (currentTurn, gladiatorLevel) => {
         if (this.previousTurn !== currentTurn) {
-            this.instance = new Battle(currentTurn)
+            this.instance = new Battle(currentTurn, gladiatorLevel)
             this.previousTurn = currentTurn
         }
 
@@ -17,13 +21,17 @@ export default class Battle {
     static playerAdvantage = (playerMartial, enemyMartial) => playerMartial - enemyMartial
 
     static playerVictoryChance = (playerMartial, enemyMartial, stanceIsAggressive, martialLevel) => {
-        const martialStanceBonus = (stanceIsAggressive, martialLevel) => stanceIsAggressive ? 5 * martialLevel : 0
 
-        let victoryChance = 55
+        const martialStanceBonus = (stanceIsAggressive, martialLevel, enemyMartial) => stanceIsAggressive ? (10 - enemyMartial) * martialLevel : 0
+
+        let victoryChance = 50
+
         victoryChance += this.playerAdvantage(playerMartial, enemyMartial) * 10
-        victoryChance += martialStanceBonus(stanceIsAggressive, martialLevel)
 
-        return victoryChance
+        // Stance bonus is relative to the fraction, so it never gets over 100
+        let stanceRelativeBonus = (100 - victoryChance) * martialStanceBonus(stanceIsAggressive, martialLevel, enemyMartial) / 100
+
+        return Math.ceil(victoryChance + stanceRelativeBonus)
     }
 
     static getBattleResult = (enemyMartial, gladiator, stance) => {
@@ -34,10 +42,11 @@ export default class Battle {
 
     static getDidPlayerWin = (enemyMartial, gladiator, stanceIsAggressive) => {
 
-        // If advantage is 0, player's chances are 55%, increases/decreases by 10 with every level
+        // If advantage is 0, player's chances are 50%, increases/decreases by 10 with every level
         let playerVictoryThreshold = this.playerVictoryChance(gladiator.martial, enemyMartial, stanceIsAggressive, gladiator.martial)
 
         const enemyRoll = Math.floor(Math.random() * 100 + 1)
+
         const didPlayerWin = enemyRoll < playerVictoryThreshold
 
         return didPlayerWin
@@ -53,21 +62,27 @@ export default class Battle {
         playerShowmanshipRoll += spectaculumStanceBonus
 
         const playerResult = playerShowmanshipRoll - shownamanshipDC
-        
+
         const playerAdvantage = this.playerAdvantage(gladiator.martial, enemyMartial)
 
-        // A range from -4 to 4, multiplying the excitement factor
-        //const surprisingResult = didPlayerWin ? playerAdvantage * -1 : playerAdvantage
-
-        //const brandChange = didPlayerWin ? surprisingResult + playerResult : playerResult - surprisingResult
-
         let surprisingResult = playerAdvantage * -1.5
+
         surprisingResult = surprisingResult > 0 ? Math.floor(surprisingResult) : Math.ceil(surprisingResult)
 
+        /*
+        // If the player's result is over 0 without assistance of the surprising result, 
+        // don't use it
         if (!didPlayerWin && surprisingResult > 0 && surprisingResult + playerResult >= 0) {
             return playerResult > 0 ? playerResult : 0
         }
-        return surprisingResult + playerResult
+        */
+
+        let brandChange = surprisingResult + playerResult;
+
+        if ((!didPlayerWin && brandChange > 0) || (didPlayerWin && brandChange < 0)) {
+            brandChange = 0;
+        }
+        return brandChange
     }
     static generateModifier = () => {
         const seed = Math.floor(Math.random() * 10 + 1)

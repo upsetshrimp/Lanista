@@ -7,7 +7,8 @@ export default class Gladiator {
         this.name = name
         this.attributes = attributes
     }
-    static xpPerLevel = [100, 200, 200, 400]
+    static maxLevel = 7
+    static xpPerLevel = [100, 100, 200, 300, 400, 500]
     static resolveTraining = (chosenAction, gladiator) => {
 
         if (chosenAction === "martial") {

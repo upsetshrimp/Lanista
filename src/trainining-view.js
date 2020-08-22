@@ -20,23 +20,23 @@ export default function TrainingView({ gladiator, chosenAction, chooseAction }) 
                 justify="center"
                 spacing={2}
             >
-                <Grid item xs={6}><h2 style={{ textAlign: 'center' }}>Showmanship</h2></Grid>
-                <Grid item xs={6}><h2 style={{ textAlign: 'center' }}>Martial</h2></Grid>
+                <Grid item xs={12}><h2 style={{ textAlign: 'center' }}>Training</h2></Grid>
+
 
                 <Grid item xs={4}><Paper
                     elevation={3}
-                    style={{ textAlign: 'center', padding:'5px' }}>
-                    Points to next level: {currentShowmanshipPoints}/{pointsToNextShowmanship}
+                    style={{ textAlign: 'center', padding: '5px' }}>
+                    Points to next Showmanship level: {currentShowmanshipPoints}/{pointsToNextShowmanship}
                 </Paper></Grid>
                 <Grid item xs={2}></Grid>
                 <Grid item xs={4}><Paper
                     elevation={3}
                     style={{ textAlign: 'center', padding: '5px' }}>
-                    Points to next level: {currentMartialPoints}/{pointsToNextMartial}
+                    Points to next Martial level: {currentMartialPoints}/{pointsToNextMartial}
                 </Paper></Grid>
                 <Grid container item xs={6} alignItems="center" spacing={1} direction='column'>
 
-                    <Button
+                    {gladiator.showmanship < Gladiator.maxLevel ? <Button
                         variant={chosenAction === 'showmanship' ? "contained" : "outlined"}
                         color={"primary"}
                         onClick={() => {
@@ -45,9 +45,16 @@ export default function TrainingView({ gladiator, chosenAction, chooseAction }) 
                         }}>
                         {"Train For Level " + (gladiator?.showmanship + 1)}
                     </Button>
+                        :
+                        <Button
+                            variant={"contained"}
+                            color={"secondary"}
+                        >
+                            Showmanship level 10 - Maximum
+                    </Button>}
                 </Grid>
                 <Grid container item xs={6} alignItems="center" spacing={1} direction='column'>
-                    <Button
+                    {gladiator.martial < Gladiator.maxLevel ? <Button
                         variant={chosenAction === 'martial' ? "contained" : "outlined"}
                         color={"primary"}
                         onClick={() => {
@@ -55,7 +62,13 @@ export default function TrainingView({ gladiator, chosenAction, chooseAction }) 
                             chooseAction(nextTrain)
                         }}>
                         {"Train For Level " + (gladiator?.martial + 1)}
-                    </Button>
+                    </Button> :
+                        <Button
+                            variant={"contained"}
+                            color={"secondary"}
+                        >
+                            Martial level 10 - Maximum
+                    </Button>}
                 </Grid>
             </Grid>
         </div >
