@@ -22,16 +22,12 @@ export default class Battle {
 
     static playerVictoryChance = (playerMartial, enemyMartial, stanceIsAggressive, martialLevel) => {
 
-        const martialStanceBonus = (stanceIsAggressive, martialLevel, enemyMartial) => stanceIsAggressive ? (10 - enemyMartial) * martialLevel : 0
-
+        const martialStanceBonus = (stanceIsAggressive, martialLevel, enemyMartial) => stanceIsAggressive ? 10 : 0
         let victoryChance = 50
 
-        victoryChance += this.playerAdvantage(playerMartial, enemyMartial) * 10
+        victoryChance += this.playerAdvantage(playerMartial, enemyMartial) * 10 +martialStanceBonus
 
-        // Stance bonus is relative to the fraction, so it never gets over 100
-        let stanceRelativeBonus = (100 - victoryChance) * martialStanceBonus(stanceIsAggressive, martialLevel, enemyMartial) / 100
-
-        return Math.ceil(victoryChance + stanceRelativeBonus)
+        return Math.ceil(victoryChance)
     }
 
     static getBattleResult = (enemyMartial, gladiator, stance) => {
