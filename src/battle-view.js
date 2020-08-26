@@ -45,8 +45,12 @@ export default function BattleView({ gladiator, currentBattle, chosenAction, cho
             </div>
             <div style={{ textAlign: "center" }}>
                 <div>Victory Chance: {victoryChance}%</div>
-                <div>Expected Brand Gain Upon Victory: ~{brandGainUponVictory}</div>
-                <div>Expected Brand Gain Upon Defeat: ~{brandGainUponDefeat}</div>
+                <div>Expected Brand Gain Upon Victory
+                    <span className="specialSymbols"> ≅ {brandGainUponVictory < 0 ? "-" : null}</span>
+                    {Math.abs(brandGainUponVictory)}</div>
+                <div>Expected Brand Gain Upon Defeat
+                <span className="specialSymbols"> ≅ {brandGainUponDefeat < 0 ? "-" : null}</span>
+                    {Math.abs(brandGainUponDefeat)}</div>
                 {chosenAction === "spectaculum" ? <span>Bonus per Showmanship level</span> : null}
                 {chosenAction === "aggressive" ? <span>Bonus per Martial level</span> : null}
             </div>

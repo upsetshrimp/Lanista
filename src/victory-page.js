@@ -5,10 +5,10 @@ import { Paper, Box } from '@material-ui/core';
 export default function VictoryPage({ turnCount, brand, wins, losses }) {
     return (
         <Box
-        width = {1}>
+        width = {1} >
             <h1>Victory!    In {turnCount} turns </h1>
                     <Paper 
-                    style={{ width: "60%", textAlign: "center" }}
+                    style={{ width: "60%", textAlign: "center", margin:"auto", padding:"auto" }}
                     elevation = {6}>
                         Brand: {brand} <br />
                 Wins: {wins} <br />

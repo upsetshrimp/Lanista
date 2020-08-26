@@ -1,7 +1,7 @@
 export default class Battle {
     static instance = null
     static previousTurn = -1
-    static gameGoal = 70
+    static gameGoal = 10
     constructor(currentTurn, gladiatorLevel) {
 
         const minLevel = gladiatorLevel > 5 ? gladiatorLevel - 4 : 1

@@ -8,7 +8,9 @@ h1 {
   text-align: center;
   font-size: 2em;
 }
-
+.specialSymbols {
+  font-family: David, Bold;
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;
