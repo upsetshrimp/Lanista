@@ -22,10 +22,11 @@ export default class Battle {
 
     static playerVictoryChance = (playerMartial, enemyMartial, stanceIsAggressive, martialLevel) => {
 
-        const martialStanceBonus = (stanceIsAggressive, martialLevel, enemyMartial) => stanceIsAggressive ? 10 : 0
+        const martialStanceBonus = stanceIsAggressive ? 10 : 0
         let victoryChance = 50
 
-        victoryChance += this.playerAdvantage(playerMartial, enemyMartial) * 10 +martialStanceBonus
+        victoryChance += (playerMartial - enemyMartial) * 10 + martialStanceBonus
+        console.log(29, victoryChance)
 
         return Math.ceil(victoryChance)
     }
