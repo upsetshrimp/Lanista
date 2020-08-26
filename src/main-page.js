@@ -8,6 +8,7 @@ import BattleView from './battle-view'
 import { Grid, Button } from '@material-ui/core';
 import BattleResultDialog from './battle-result-dialog';
 import TrainingResultDialog from './training-result-dialog'
+import VictoryPage from './victory-page'
 
 
 export default function MainPage() {
@@ -22,6 +23,7 @@ export default function MainPage() {
     const [showTrainingResult, setShowTrainingResult] = useState(undefined)
     const isInBattle = turnCount === currentBattle.turn
     const canEndTurn = chosenAction !== undefined
+    const isGameOver = brand >= Battle.gameGoal
 
     useEffect(() => {
         const bubu = InitialConditions.initializeConditions()
@@ -40,13 +42,6 @@ export default function MainPage() {
             setBrand(brand + brandChange)
             setBattleResult({ didPlayerWin, stance: chosenAction, enemyLvl: currentBattle.enemyLvl, brandChange })
             setShowBattleResult(true)
-
-            if (brand + brandChange >= Battle.gameGoal) {
-                alert(`Victory! In ${turnCount} turns.
-                Brand: ${brand + brandChange},
-                Wins: ${gameHistory.wins}
-                Losses: ${gameHistory.losses}`)
-            }
         }
         else {
             const gladiatorChange = Gladiator.resolveTraining(chosenAction, gladiator)
@@ -58,36 +53,39 @@ export default function MainPage() {
         setChosenAction(undefined)
         setTurnCount(turnCount + 1)
     }
-    return (
-        <Grid container direction='column' alignItems='center'>
-            <Grid item key={1} xs={12}>
-                <StatView
-                    gladiator={gladiator}
-                    currentBattle={currentBattle}
-                    turnCount={turnCount}
-                    brand={brand}
-                    gameHistory={gameHistory}
-                    isInBattle={isInBattle} />
-            </Grid>
-            <hr/>
-            <Grid item key={2}>
-                {isInBattle ?
-                    <BattleView gladiator={gladiator} currentBattle={currentBattle} chosenAction={chosenAction} chooseAction={setChosenAction} /> :
-                    <TrainingView gladiator={gladiator} chosenAction={chosenAction} chooseAction={setChosenAction} />
-                }
-            </Grid>
-            <Grid item key={3} xs={10}>
-                <Button
-                    disabled={!canEndTurn}
-                    onClick={advanceTurn}
-                    variant="contained"
-                    color="secondary"
-                    size="large"
 
-                >End Turn</Button>
+    return (
+        <>
+            {isGameOver ? <VictoryPage turnCount={turnCount} brand={brand} wins={gameHistory.wins} losses={gameHistory.losses} /> 
+            : <Grid container direction='column' alignItems='center'>
+                <Grid item key={1} xs={12}>
+                    <StatView
+                        gladiator={gladiator}
+                        currentBattle={currentBattle}
+                        turnCount={turnCount}
+                        brand={brand}
+                        gameHistory={gameHistory}
+                        isInBattle={isInBattle} />
+                </Grid>
+                <hr />
+                <Grid item key={2}>
+                    {isInBattle ?
+                        <BattleView gladiator={gladiator} currentBattle={currentBattle} chosenAction={chosenAction} chooseAction={setChosenAction} /> :
+                        <TrainingView gladiator={gladiator} chosenAction={chosenAction} chooseAction={setChosenAction} />
+                    }
+                </Grid>
+                <Grid item key={3} xs={10}>
+                    <Button
+                        disabled={!canEndTurn}
+                        onClick={advanceTurn}
+                        variant="contained"
+                        color="secondary"
+                        size="large"
+
+                    >End Turn</Button>
+                </Grid>
+                <BattleResultDialog battleResult={battleResult} isOpen={showBattleResult} close={() => setShowBattleResult(false)} />
+                <TrainingResultDialog gladiator={gladiator} ability={showTrainingResult} isOpen={showTrainingResult} close={() => setShowTrainingResult(undefined)} />
             </Grid>
-            <BattleResultDialog battleResult={battleResult} isOpen={showBattleResult} close={() => setShowBattleResult(false)} />
-            <TrainingResultDialog gladiator={gladiator} ability={showTrainingResult} isOpen={showTrainingResult} close={() => setShowTrainingResult(undefined)} />
-        </Grid>
-    );
+            } </>);
 }
